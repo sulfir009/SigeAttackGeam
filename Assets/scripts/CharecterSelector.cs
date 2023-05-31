@@ -1,13 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
-public class CharecterSelector : MonoBehaviour
+public class CharacterSelector : MonoBehaviour
 {
     public Button selectButton;
-    public RawImage characterImage;
+    public Image characterImage;
     public TextMeshProUGUI characterDescription;
 
     public Sprite[] characterSprites;
