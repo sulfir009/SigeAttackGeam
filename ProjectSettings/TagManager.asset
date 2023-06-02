@@ -9,6 +9,7 @@ TagManager:
   - CoutPlayer2
   - CoutPlayer3
   - CoutPlayer4
+  - Enemy
   layers:
   - Default
   - TransparentFX
