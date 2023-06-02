@@ -11,6 +11,15 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/SampleScene.unity
     guid: c850ee8c3b14cc8459e7e186857cf567
+  - enabled: 1
+    path: Assets/Scenes/Player.unity
+    guid: 37006365bfcd61442a00d5845629add5
+  - enabled: 1
+    path: Assets/Scenes/Event.unity
+    guid: b0060e3fbb0c05148b95a856360c6903
+  - enabled: 1
+    path: Assets/Scenes/Shop.unity
+    guid: f2d27b9f6c012174a8f7ad52ed777e1e
   m_configObjects:
     com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: 2d96b234ad01405429a72ff47973b252,
       type: 2}

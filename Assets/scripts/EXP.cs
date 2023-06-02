@@ -24,7 +24,28 @@ public class EXP : MonoBehaviour
         { "dragon", 5 },
         { "fox", 4 }
     };
-
+    public int Coins
+    {
+        get { return coins; }
+        set
+        {
+            coins = value;
+            SaveData();  // сохраняем данные при любых изменениях количества монет
+        }
+    }
+    public void BuyCharacter(int price)
+    {
+        // Проверяем, что у игрока достаточно монет
+        if (Coins >= price)
+        {
+            // Вычитаем стоимость персонажа из монет игрока и сохраняем данные
+            Coins -= price;
+        }
+        else
+        {
+            Debug.LogError("Not enough coins to buy character");
+        }
+    }
     // Start is called before the first frame update
     void Start()
     {

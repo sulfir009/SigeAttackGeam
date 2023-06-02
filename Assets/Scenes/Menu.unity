@@ -1886,6 +1886,7 @@ GameObject:
   - component: {fileID: 1007321463}
   - component: {fileID: 1007321462}
   - component: {fileID: 1007321461}
+  - component: {fileID: 1007321464}
   m_Layer: 5
   m_Name: Home
   m_TagString: Untagged
@@ -1913,7 +1914,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 41.5339, y: -203.78}
+  m_AnchoredPosition: {x: 75, y: -203.78}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1007321461
@@ -1959,7 +1960,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1007321462}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1007321464}
+        m_TargetAssemblyTypeName: PlayGame, Assembly-CSharp
+        m_MethodName: LoadHome
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1007321462
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1998,6 +2011,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1007321459}
   m_CullTransparentMesh: 1
+--- !u!114 &1007321464
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1007321459}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36caba9407fc0ab4283b9987cdb253b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1059830815
 GameObject:
   m_ObjectHideFlags: 0
@@ -2648,6 +2673,7 @@ GameObject:
   - component: {fileID: 1263547837}
   - component: {fileID: 1263547836}
   - component: {fileID: 1263547835}
+  - component: {fileID: 1263547838}
   m_Layer: 5
   m_Name: Player
   m_TagString: Untagged
@@ -2675,7 +2701,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -40.668995, y: -203.78}
+  m_AnchoredPosition: {x: -87, y: -203.78}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1263547835
@@ -2721,7 +2747,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1263547836}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1263547838}
+        m_TargetAssemblyTypeName: PlayGame, Assembly-CSharp
+        m_MethodName: LoadPlayers
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1263547836
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2760,6 +2798,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1263547833}
   m_CullTransparentMesh: 1
+--- !u!114 &1263547838
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1263547833}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36caba9407fc0ab4283b9987cdb253b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1372501337
 GameObject:
   m_ObjectHideFlags: 0
@@ -3457,6 +3507,7 @@ GameObject:
   - component: {fileID: 1915082069}
   - component: {fileID: 1915082068}
   - component: {fileID: 1915082067}
+  - component: {fileID: 1915082070}
   m_Layer: 5
   m_Name: Event
   m_TagString: Untagged
@@ -3484,7 +3535,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 123, y: -203.78}
+  m_AnchoredPosition: {x: 207.7, y: -203.78}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1915082067
@@ -3530,7 +3581,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1915082068}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1915082070}
+        m_TargetAssemblyTypeName: PlayGame, Assembly-CSharp
+        m_MethodName: EventsLoad
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1915082068
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3569,6 +3632,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1915082065}
   m_CullTransparentMesh: 1
+--- !u!114 &1915082070
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1915082065}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36caba9407fc0ab4283b9987cdb253b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1935819359
 GameObject:
   m_ObjectHideFlags: 0
@@ -4140,6 +4215,7 @@ GameObject:
   - component: {fileID: 2095926864}
   - component: {fileID: 2095926863}
   - component: {fileID: 2095926862}
+  - component: {fileID: 2095926865}
   m_Layer: 5
   m_Name: Shop
   m_TagString: Untagged
@@ -4167,7 +4243,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -124.347, y: -203.78}
+  m_AnchoredPosition: {x: -192, y: -203.78}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2095926862
@@ -4213,7 +4289,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2095926863}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2095926865}
+        m_TargetAssemblyTypeName: PlayGame, Assembly-CSharp
+        m_MethodName: LoadShop
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2095926863
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4252,6 +4340,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2095926860}
   m_CullTransparentMesh: 1
+--- !u!114 &2095926865
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2095926860}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36caba9407fc0ab4283b9987cdb253b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2110601899
 GameObject:
   m_ObjectHideFlags: 0

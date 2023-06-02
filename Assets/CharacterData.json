@@ -1,0 +1,20 @@
+[
+    {
+        "name": "Fox",
+        "isBought": false,
+        "image": "Characters/Fox",
+        "price": 10,
+        "strength": 10,
+        "speed": 5,
+        "hasSkill": true
+    },
+    {
+        "name": "Master",
+        "isBought": false,
+        "image": "Characters/Master",
+        "price": 10000,
+        "strength": 15,
+        "speed": 7,
+        "hasSkill": false
+    }
+]
