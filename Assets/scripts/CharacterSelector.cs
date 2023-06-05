@@ -50,13 +50,14 @@ public class CharacterSelector : MonoBehaviour
     public TMP_Text powerText;
     public TMP_Text speedText;
     public TMP_Text skillText;
+    public Button[] characterButtons;
     public RawImage image;
     public TMP_Text coinsText;
     public Button buyButton;
     public Button selectButton;
     public string saveFilePath = "/CharacterData.json";
     private string fullSavePath;
-    private List<CharacterData> characterList = new List<CharacterData>();
+    static public List<CharacterData> characterList = new List<CharacterData>();
     private int selectedCharacterIndex = -1;
     private string selectedCharacterName = null;
     public EXP expScript;
@@ -64,15 +65,31 @@ public class CharacterSelector : MonoBehaviour
     private void Start()
     {
         fullSavePath = Application.persistentDataPath + saveFilePath;
+        Debug.Log(fullSavePath);
         LoadData();
         UpdateCoinsText();
+        if (GlobalContext.SelectedCharacter == null)
+        {
+            
+          
+        }
+        for (int i = 0; i < characterButtons.Length; i++)
+        {
+            int index = i; // копируем индекс в отдельную переменную для замыкания
+            characterButtons[i].onClick.AddListener(() =>
+            {
+                SelectCharacter(index);
+            });
+        }
     }
 
     private void LoadData()
     {
-        if (File.Exists(fullSavePath))
+        UnityEngine.TextAsset characterDataAsset = Resources.Load<UnityEngine.TextAsset>("CharacterData");
+
+        if (characterDataAsset != null)
         {
-            string json = File.ReadAllText(fullSavePath);
+            string json = characterDataAsset.text;
             CharacterDataArray characterDataArray = JsonUtility.FromJson<CharacterDataArray>(json);
 
             if (characterDataArray.characters != null)
@@ -88,7 +105,7 @@ public class CharacterSelector : MonoBehaviour
         }
         else
         {
-            Debug.LogError("Unable to find CharacterData file in persistent data path");
+            Debug.LogError("Unable to find CharacterData file in Resources");
         }
     }
 
@@ -156,7 +173,7 @@ public class CharacterSelector : MonoBehaviour
         powerText.text = $"{character.strength}";
         speedText.text = $"{character.speed}";
         skillText.text = $"{(character.hasSkill ? "Yes" : "No")}";
-
+        SelectCharacterAsCurrent();
         Texture2D loadedTexture = Resources.Load<Texture2D>(character.image);
         if (loadedTexture == null)
         {

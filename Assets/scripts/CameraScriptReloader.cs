@@ -1,4 +1,3 @@
-using UnityEditor;
 using UnityEngine;
 
 public class CameraScriptReloader : MonoBehaviour
@@ -16,7 +15,7 @@ public class CameraScriptReloader : MonoBehaviour
 
     private void ReloadCameraScript()
     {
-        controllCamera.player = newPlayerTransform;
+        controllCamera.playerTransform = newPlayerTransform;
         controllCamera.offset = newOffset;
     }
 }

@@ -103,8 +103,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unity.TextMeshPro", "Unity.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unity.Timeline", "Unity.Timeline.Player.csproj", "{4BDF6CC4-1B77-5A2C-2723-0169FB2427BC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unity.Notifications.Android", "Unity.Notifications.Android.Player.csproj", "{84C256A7-B773-7867-6EED-999EEB968877}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "Assembly-CSharp.Player.csproj", "{0C5938B5-B1B7-9EC8-700A-B78131D1EB49}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unity.AdaptivePerformance.Samsung.Android", "Unity.AdaptivePerformance.Samsung.Android.Player.csproj", "{5BD9C2F1-4D61-B776-D0C8-5EBFB209155F}"
@@ -323,10 +321,6 @@ Global
 		{4BDF6CC4-1B77-5A2C-2723-0169FB2427BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4BDF6CC4-1B77-5A2C-2723-0169FB2427BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4BDF6CC4-1B77-5A2C-2723-0169FB2427BC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{84C256A7-B773-7867-6EED-999EEB968877}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{84C256A7-B773-7867-6EED-999EEB968877}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{84C256A7-B773-7867-6EED-999EEB968877}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{84C256A7-B773-7867-6EED-999EEB968877}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0C5938B5-B1B7-9EC8-700A-B78131D1EB49}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0C5938B5-B1B7-9EC8-700A-B78131D1EB49}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0C5938B5-B1B7-9EC8-700A-B78131D1EB49}.Release|Any CPU.ActiveCfg = Release|Any CPU

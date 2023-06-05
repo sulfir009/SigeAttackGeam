@@ -20,7 +20,7 @@ public class PlayGame : MonoBehaviour
     }
     public void Load()
     {
-        characterSelector.SelectCharacterAsCurrent();
+
         SceneManager.LoadScene("SampleScene");
     }
     public void LoadShop()
