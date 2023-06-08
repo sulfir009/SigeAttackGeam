@@ -54,27 +54,6 @@ public class PlayerController : MonoBehaviour
     }
     public void Update()
     {
-        if (playerAnimator == null)
-        {
-            Debug.LogError("PlayerAnimator is null");
-            return;
-        }
-        if (joystick == null)
-        {
-            
-            return;
-        }
-        if (characterController == null)
-        {
-            Debug.LogError("CharacterController is null");
-            return;
-        }
-        if (controllCamera == null)
-        {
-            Debug.LogError("ControlCamera is null");
-            return;
-        }
-
         if (isDead) return;
 
         float moveHorizontal = joystick.Horizontal;
@@ -93,9 +72,9 @@ public class PlayerController : MonoBehaviour
         float currentSpeed = isRunning ? runSpeed : speed;
 
         characterController.Move(moveDirection * currentSpeed * Time.deltaTime);
-
+      
         playerAnimator.SetBool("IsRunning", isRunning);
-
+       
         playerAnimator.SetFloat("Speed", moveDirection.magnitude > 0 ? 1 : 0);
 
         if (moveDirection != Vector3.zero)

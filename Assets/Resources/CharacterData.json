@@ -7,8 +7,7 @@
             "price": 10,
             "strength": 10,
             "speed": 5,
-            "hasSkill": false,
-            "index": 0
+            "hasSkill": false
         },
         {
             "name": "Master",
@@ -17,9 +16,7 @@
             "price": 10000,
             "strength": 29,
             "speed": 7,
-            "hasSkill": true,
-            "index": 1
+            "hasSkill": true
         }
-    ],
-    "selectedCharacterIndex": 0
+    ]
 }

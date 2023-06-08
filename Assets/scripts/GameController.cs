@@ -20,7 +20,7 @@ public class GameController : MonoBehaviour
             CharacterSelector characterSelector = GameObject.FindObjectOfType<CharacterSelector>();
             if (characterSelector != null)
             {
-                characterSelector.SelectCharacter(0);
+                characterSelector.SelectCharacterByName("Fox");
             }
             else
             {
@@ -28,9 +28,6 @@ public class GameController : MonoBehaviour
                 return;
             }
         }
-
-        Debug.Log("Spawning player with character " + GlobalContext.SelectedCharacter.Name);
-
 
         GameObject characterPrefab = Resources.Load<GameObject>(GlobalContext.SelectedCharacter.Name);
         if (characterPrefab == null)
@@ -41,8 +38,9 @@ public class GameController : MonoBehaviour
 
         GameObject player = Instantiate(characterPrefab, playerSpawnPoint.position, playerSpawnPoint.rotation);
         PlayerController playerController = player.AddComponent<PlayerController>();
-        playerController.playerPower = GlobalContext.SelectedCharacter.Strength;
-        playerController.speed = GlobalContext.SelectedCharacter.Speed;
+        playerController.playerPower = GlobalContext.SelectedCharacter.Strength; // Пример присвоения силы персонажу
+        playerController.speed = GlobalContext.SelectedCharacter.Speed; // Пример присвоения speed персонажу
+
 
         playerController.joystick = GameObject.Find("Dynamic Joystick").GetComponent<DynamicJoystick>();
         playerController.deathMessage = GameObject.Find("DethMesh").GetComponent<TextMeshProUGUI>();
@@ -51,8 +49,6 @@ public class GameController : MonoBehaviour
         playerController.playerAnimator = player.GetComponent<Animator>();
         playerController.runButton = GameObject.Find("Speed").GetComponent<Button>();
         playerController.attackButton = GameObject.Find("Attak").GetComponent<Button>();
-        playerController.playerTransform = player.transform;
-
         GameObject mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
         if (mainCamera != null)
         {
@@ -71,5 +67,7 @@ public class GameController : MonoBehaviour
         {
             Debug.LogError("Failed to find Main Camera in the scene");
         }
+
     }
+
 }
