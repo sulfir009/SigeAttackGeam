@@ -32,6 +32,16 @@ public class MobChaseController : MonoBehaviour
 
     private void Update()
     {
+        if (mobAnimator == null) return;
+        if (playerTransform == null)
+        {
+            playerTransform = GameObject.FindWithTag("Player").transform;
+            if (playerTransform == null)
+            {
+                // Player object still not found, skip the rest of the update
+                return;
+            }
+        }
         float distance = Vector3.Distance(transform.position, playerTransform.position);
         if (isDead) return;
 

@@ -2,16 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
+using UnityEngine.UIElements;
+using static CharacterSelector;
 
 public class PlayGame : MonoBehaviour
 {
     private CharacterSelector characterSelector;
+    public GameObject errorPanel;
     // Start is called before the first frame update
     void Start()
     {
-        
+        characterSelector = FindObjectOfType<CharacterSelector>();
+        if (errorPanel != null)
+        {
+            errorPanel.SetActive(false);
+        }
     }
+
 
     // Update is called once per frame
     void Update()
@@ -20,9 +27,32 @@ public class PlayGame : MonoBehaviour
     }
     public void Load()
     {
+        if (GlobalContext.SelectedCharacter == null)
+        {
+            Debug.LogWarning("No character selected, cannot start game");
+            ShowErrorPanel();
+            return;
+        }
 
         SceneManager.LoadScene("SampleScene");
     }
+    private void ShowErrorPanel()
+    {
+        if (errorPanel != null)
+        {
+            errorPanel.SetActive(true);
+            Invoke("HideErrorPanel", 3f);
+        }
+    }
+
+    private void HideErrorPanel()
+    {
+        if (errorPanel != null)
+        {
+            errorPanel.SetActive(false);
+        }
+    }
+
     public void LoadShop()
     {
         SceneManager.LoadScene("Shop");

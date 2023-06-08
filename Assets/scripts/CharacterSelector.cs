@@ -3,7 +3,6 @@ using UnityEngine.UI;
 using System.IO;
 using TMPro;
 using System.Collections.Generic;
-using UnityEngine.TextCore.Text;
 
 [System.Serializable]
 public class CharacterData
@@ -15,7 +14,9 @@ public class CharacterData
     public int strength;
     public int speed;
     public bool hasSkill;
+    public int index;
 }
+
 public class Character
 {
     public string Name { get; set; }
@@ -25,6 +26,7 @@ public class Character
     public int Strength { get; set; }
     public int Speed { get; set; }
     public bool HasSkill { get; set; }
+    public int Index { get; set; }
 
     public Character(CharacterData characterData)
     {
@@ -35,13 +37,15 @@ public class Character
         Strength = characterData.strength;
         Speed = characterData.speed;
         HasSkill = characterData.hasSkill;
+        Index = characterData.index;
     }
 }
+
 [System.Serializable]
 public class CharacterDataArray
 {
     public CharacterData[] characters;
-    public string selectedCharacterName;
+    public int selectedCharacterIndex;
 }
 
 public class CharacterSelector : MonoBehaviour
@@ -50,6 +54,7 @@ public class CharacterSelector : MonoBehaviour
     public TMP_Text powerText;
     public TMP_Text speedText;
     public TMP_Text skillText;
+    public TMP_Text price;
     public Button[] characterButtons;
     public RawImage image;
     public TMP_Text coinsText;
@@ -58,24 +63,23 @@ public class CharacterSelector : MonoBehaviour
     public string saveFilePath = "/CharacterData.json";
     private string fullSavePath;
     static public List<CharacterData> characterList = new List<CharacterData>();
-    private int selectedCharacterIndex = -1;
-    private string selectedCharacterName = null;
+    public int selectedCharacterIndex = -1;
     public EXP expScript;
 
     private void Start()
     {
+        
+
         fullSavePath = Application.persistentDataPath + saveFilePath;
         Debug.Log(fullSavePath);
         LoadData();
+        
         UpdateCoinsText();
-        if (GlobalContext.SelectedCharacter == null)
-        {
-            
-          
-        }
+
         for (int i = 0; i < characterButtons.Length; i++)
         {
-            int index = i; // копируем индекс в отдельную переменную для замыкания
+            int index = i;
+            characterButtons[i].onClick.RemoveAllListeners();
             characterButtons[i].onClick.AddListener(() =>
             {
                 SelectCharacter(index);
@@ -85,11 +89,9 @@ public class CharacterSelector : MonoBehaviour
 
     private void LoadData()
     {
-        UnityEngine.TextAsset characterDataAsset = Resources.Load<UnityEngine.TextAsset>("CharacterData");
-
-        if (characterDataAsset != null)
+        if (File.Exists(fullSavePath))
         {
-            string json = characterDataAsset.text;
+            string json = File.ReadAllText(fullSavePath);
             CharacterDataArray characterDataArray = JsonUtility.FromJson<CharacterDataArray>(json);
 
             if (characterDataArray.characters != null)
@@ -97,15 +99,15 @@ public class CharacterSelector : MonoBehaviour
                 characterList = new List<CharacterData>(characterDataArray.characters);
                 if (characterList.Count > 0)
                 {
-                    selectedCharacterIndex = 0;
                     UpdateUI();
                 }
-                selectedCharacterName = characterDataArray.selectedCharacterName;
+                selectedCharacterIndex = characterDataArray.selectedCharacterIndex;
+                
             }
         }
         else
         {
-            Debug.LogError("Unable to find CharacterData file in Resources");
+            Debug.LogError("Unable to find CharacterData file");
         }
     }
 
@@ -114,7 +116,7 @@ public class CharacterSelector : MonoBehaviour
         CharacterDataArray characterDataArray = new CharacterDataArray
         {
             characters = characterList.ToArray(),
-            selectedCharacterName = selectedCharacterName
+            selectedCharacterIndex = selectedCharacterIndex
         };
 
         string json = JsonUtility.ToJson(characterDataArray, true);
@@ -130,27 +132,27 @@ public class CharacterSelector : MonoBehaviour
         }
 
         selectedCharacterIndex = index;
+        GlobalContext.SelectedCharacter = new Character(characterList[selectedCharacterIndex]);
+        
+        SaveData();
         UpdateUI();
     }
 
     public void BuyCharacter()
     {
-        if (selectedCharacterIndex < 0 || selectedCharacterIndex >= characterList.Count)
-        {
-            Debug.LogError("Invalid character index");
-            return;
-        }
+        Debug.Log("Buying Character with index: " + selectedCharacterIndex);
 
-        if (characterList[selectedCharacterIndex].isBought)
+        if (GlobalContext.SelectedCharacter.IsBought)
         {
             Debug.LogError("Character already bought");
             return;
         }
 
-        if (expScript.Coins >= characterList[selectedCharacterIndex].price)
+        if (expScript.Coins >= GlobalContext.SelectedCharacter.Price)
         {
-            expScript.BuyCharacter(characterList[selectedCharacterIndex].price);
+            expScript.BuyCharacter(GlobalContext.SelectedCharacter.Price);
             characterList[selectedCharacterIndex].isBought = true;
+            GlobalContext.SelectedCharacter = new Character(characterList[selectedCharacterIndex]);
             UpdateUI();
             SaveData();
         }
@@ -162,29 +164,30 @@ public class CharacterSelector : MonoBehaviour
 
     private void UpdateUI()
     {
-        if (selectedCharacterIndex < 0 || selectedCharacterIndex >= characterList.Count)
+        if (GlobalContext.SelectedCharacter == null)
         {
-            Debug.LogError("Invalid character index");
+            Debug.LogError("No character selected");
             return;
         }
 
-        CharacterData character = characterList[selectedCharacterIndex];
-        nameText.text = character.name;
-        powerText.text = $"{character.strength}";
-        speedText.text = $"{character.speed}";
-        skillText.text = $"{(character.hasSkill ? "Yes" : "No")}";
-        SelectCharacterAsCurrent();
-        Texture2D loadedTexture = Resources.Load<Texture2D>(character.image);
+        Character character = GlobalContext.SelectedCharacter;
+        nameText.text = character.Name;
+        powerText.text = $"{character.Strength}";
+        speedText.text = $"{character.Speed}";
+        skillText.text = $"{(character.HasSkill ? "Yes" : "No")}";
+        price.text = character.Price.ToString();
+
+        Texture2D loadedTexture = Resources.Load<Texture2D>(character.Image);
         if (loadedTexture == null)
         {
-            Debug.LogError("Failed to load image at path " + character.image);
+            Debug.LogError("Failed to load image at path " + character.Image);
         }
         else
         {
             image.texture = loadedTexture;
         }
 
-        if (character.isBought)
+        if (character.IsBought)
         {
             buyButton.gameObject.SetActive(false);
             selectButton.gameObject.SetActive(true);
@@ -200,32 +203,13 @@ public class CharacterSelector : MonoBehaviour
     {
         coinsText.text = $"{expScript.coins}";
     }
+
     public static class GlobalContext
     {
         public static Character SelectedCharacter { get; set; }
     }
-    public void SelectCharacterAsCurrent()
+    public int SelectedCharacterIndex
     {
-        if (selectedCharacterIndex < 0 || selectedCharacterIndex >= characterList.Count)
-        {
-            Debug.LogError("Invalid character index");
-            return;
-        }
-
-        GlobalContext.SelectedCharacter = new Character(characterList[selectedCharacterIndex]);
-    }
-
-    public void SelectCharacterByName(string characterName)
-    {
-        int index = characterList.FindIndex(character => character.name == characterName);
-        Debug.Log(Application.persistentDataPath);
-        if (index != -1)
-        {
-            SelectCharacter(index);
-        }
-        else
-        {
-            Debug.LogError("Character with name " + characterName + " not found");
-        }
+        get { return selectedCharacterIndex; }
     }
 }
