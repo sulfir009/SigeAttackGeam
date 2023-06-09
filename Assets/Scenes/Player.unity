@@ -1225,6 +1225,7 @@ MonoBehaviour:
   buyButton: {fileID: 1263622796}
   selectButton: {fileID: 426407662}
   saveFilePath: /CharacterData.json
+  characterList: []
   expScript: {fileID: 526982664}
 --- !u!1 &429757643
 GameObject:
@@ -1701,6 +1702,7 @@ MonoBehaviour:
   buyButton: {fileID: 1263622796}
   selectButton: {fileID: 426407662}
   saveFilePath: /CharacterData.json
+  characterList: []
   expScript: {fileID: 526982664}
 --- !u!1 &721686584
 GameObject:
@@ -2320,6 +2322,7 @@ MonoBehaviour:
   buyButton: {fileID: 1263622796}
   selectButton: {fileID: 426407662}
   saveFilePath: /CharacterData.json
+  characterList: []
   expScript: {fileID: 526982664}
 --- !u!1 &829669585
 GameObject:
@@ -3263,6 +3266,7 @@ MonoBehaviour:
   buyButton: {fileID: 1263622796}
   selectButton: {fileID: 426407662}
   saveFilePath: /CharacterData.json
+  characterList: []
   expScript: {fileID: 526982664}
 --- !u!1 &1214637858
 GameObject:
@@ -3553,7 +3557,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1263622795
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3691,6 +3695,7 @@ MonoBehaviour:
   buyButton: {fileID: 1263622796}
   selectButton: {fileID: 426407662}
   saveFilePath: /CharacterData.json
+  characterList: []
   expScript: {fileID: 526982664}
 --- !u!1 &1330586548
 GameObject:

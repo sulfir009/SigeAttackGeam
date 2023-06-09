@@ -3,7 +3,6 @@ using UnityEngine.UI;
 using System.IO;
 using TMPro;
 using System.Collections.Generic;
-using UnityEngine.TextCore.Text;
 
 [System.Serializable]
 public class CharacterData
@@ -16,32 +15,12 @@ public class CharacterData
     public int speed;
     public bool hasSkill;
 }
-public class Character
-{
-    public string Name { get; set; }
-    public bool IsBought { get; set; }
-    public string Image { get; set; }
-    public int Price { get; set; }
-    public int Strength { get; set; }
-    public int Speed { get; set; }
-    public bool HasSkill { get; set; }
 
-    public Character(CharacterData characterData)
-    {
-        Name = characterData.name;
-        IsBought = characterData.isBought;
-        Image = characterData.image;
-        Price = characterData.price;
-        Strength = characterData.strength;
-        Speed = characterData.speed;
-        HasSkill = characterData.hasSkill;
-    }
-}
 [System.Serializable]
 public class CharacterDataArray
 {
     public CharacterData[] characters;
-    public string selectedCharacterName;
+    public int selectedCharacterIndex;
 }
 
 public class CharacterSelector : MonoBehaviour
@@ -57,9 +36,8 @@ public class CharacterSelector : MonoBehaviour
     public Button selectButton;
     public string saveFilePath = "/CharacterData.json";
     private string fullSavePath;
-    static public List<CharacterData> characterList = new List<CharacterData>();
-    private int selectedCharacterIndex = -1;
-    private string selectedCharacterName = null;
+    public List<CharacterData> characterList = new List<CharacterData>();
+    private int selectedCharacterIndex = 0;
     public EXP expScript;
 
     private void Start()
@@ -68,14 +46,16 @@ public class CharacterSelector : MonoBehaviour
         Debug.Log(fullSavePath);
         LoadData();
         UpdateCoinsText();
-        if (GlobalContext.SelectedCharacter == null)
+        buyButton.onClick.AddListener(() =>
         {
-            
-          
-        }
+            if (selectedCharacterIndex >= 0 && selectedCharacterIndex < characterList.Count)
+            {
+                BuyCharacter();
+            }
+        });
         for (int i = 0; i < characterButtons.Length; i++)
         {
-            int index = i; // копируем индекс в отдельную переменную для замыкания
+            int index = i;
             characterButtons[i].onClick.AddListener(() =>
             {
                 SelectCharacter(index);
@@ -86,21 +66,40 @@ public class CharacterSelector : MonoBehaviour
     private void LoadData()
     {
         UnityEngine.TextAsset characterDataAsset = Resources.Load<UnityEngine.TextAsset>("CharacterData");
-
         if (characterDataAsset != null)
         {
             string json = characterDataAsset.text;
             CharacterDataArray characterDataArray = JsonUtility.FromJson<CharacterDataArray>(json);
-
-            if (characterDataArray.characters != null)
+            if (characterDataArray != null)
             {
-                characterList = new List<CharacterData>(characterDataArray.characters);
-                if (characterList.Count > 0)
+                if (characterDataArray.characters != null)
                 {
-                    selectedCharacterIndex = 0;
-                    UpdateUI();
+                    characterList = new List<CharacterData>(characterDataArray.characters);
+                    if (characterList.Count > 0)
+                    {
+                        selectedCharacterIndex = characterDataArray.selectedCharacterIndex;
+                        if (selectedCharacterIndex >= 0 && selectedCharacterIndex < characterList.Count)
+                        {
+                            UpdateUI();
+                        }
+                        else
+                        {
+                            Debug.LogError("Invalid selectedCharacterIndex in the saved data");
+                        }
+                    }
+                    else
+                    {
+                        Debug.LogError("No characters found in the saved data");
+                    }
                 }
-                selectedCharacterName = characterDataArray.selectedCharacterName;
+                else
+                {
+                    Debug.LogError("No characters found in the saved data");
+                }
+            }
+            else
+            {
+                Debug.LogError("Failed to parse CharacterDataArray from JSON");
             }
         }
         else
@@ -114,7 +113,7 @@ public class CharacterSelector : MonoBehaviour
         CharacterDataArray characterDataArray = new CharacterDataArray
         {
             characters = characterList.ToArray(),
-            selectedCharacterName = selectedCharacterName
+            selectedCharacterIndex = selectedCharacterIndex
         };
 
         string json = JsonUtility.ToJson(characterDataArray, true);
@@ -130,7 +129,14 @@ public class CharacterSelector : MonoBehaviour
         }
 
         selectedCharacterIndex = index;
+        GlobalContext.SelectedCharacter = characterList[index]; // Добавляем эту строку, чтобы обновить выбранный персонаж в глобальном контексте
         UpdateUI();
+        SaveData();
+    }
+
+    public class GlobalContext
+    {
+        public static CharacterData SelectedCharacter { get; set; }
     }
 
     public void BuyCharacter()
@@ -141,16 +147,17 @@ public class CharacterSelector : MonoBehaviour
             return;
         }
 
-        if (characterList[selectedCharacterIndex].isBought)
+        CharacterData selectedCharacter = characterList[selectedCharacterIndex];
+        if (selectedCharacter.isBought)
         {
             Debug.LogError("Character already bought");
             return;
         }
 
-        if (expScript.Coins >= characterList[selectedCharacterIndex].price)
+        if (expScript.Coins >= selectedCharacter.price)
         {
-            expScript.BuyCharacter(characterList[selectedCharacterIndex].price);
-            characterList[selectedCharacterIndex].isBought = true;
+            expScript.BuyCharacter(selectedCharacter.price);
+            selectedCharacter.isBought = true;
             UpdateUI();
             SaveData();
         }
@@ -173,7 +180,7 @@ public class CharacterSelector : MonoBehaviour
         powerText.text = $"{character.strength}";
         speedText.text = $"{character.speed}";
         skillText.text = $"{(character.hasSkill ? "Yes" : "No")}";
-        SelectCharacterAsCurrent();
+
         Texture2D loadedTexture = Resources.Load<Texture2D>(character.image);
         if (loadedTexture == null)
         {
@@ -199,33 +206,5 @@ public class CharacterSelector : MonoBehaviour
     private void UpdateCoinsText()
     {
         coinsText.text = $"{expScript.coins}";
-    }
-    public static class GlobalContext
-    {
-        public static Character SelectedCharacter { get; set; }
-    }
-    public void SelectCharacterAsCurrent()
-    {
-        if (selectedCharacterIndex < 0 || selectedCharacterIndex >= characterList.Count)
-        {
-            Debug.LogError("Invalid character index");
-            return;
-        }
-
-        GlobalContext.SelectedCharacter = new Character(characterList[selectedCharacterIndex]);
-    }
-
-    public void SelectCharacterByName(string characterName)
-    {
-        int index = characterList.FindIndex(character => character.name == characterName);
-        Debug.Log(Application.persistentDataPath);
-        if (index != -1)
-        {
-            SelectCharacter(index);
-        }
-        else
-        {
-            Debug.LogError("Character with name " + characterName + " not found");
-        }
     }
 }
