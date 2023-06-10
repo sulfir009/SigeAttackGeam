@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
+using static CharacterSelector;
 
 public class PlayGame : MonoBehaviour
 {
     private CharacterSelector characterSelector;
+    public TextMeshProUGUI errorText;
     // Start is called before the first frame update
     void Start()
     {
@@ -20,8 +22,16 @@ public class PlayGame : MonoBehaviour
     }
     public void Load()
     {
-
-        SceneManager.LoadScene("SampleScene");
+        if (GlobalContext.SelectedCharacter == null)
+        {
+            // Display error message
+            errorText.text = "Please select a character before starting the game.";
+        }
+        else
+        {
+            // If a character is selected, load the scene
+            SceneManager.LoadScene("SampleScene");
+        }
     }
     public void LoadShop()
     {

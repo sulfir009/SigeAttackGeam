@@ -29,6 +29,7 @@ public class CharacterSelector : MonoBehaviour
     public TMP_Text powerText;
     public TMP_Text speedText;
     public TMP_Text skillText;
+    public TMP_Text price;
     public Button[] characterButtons;
     public RawImage image;
     public TMP_Text coinsText;
@@ -37,7 +38,7 @@ public class CharacterSelector : MonoBehaviour
     public string saveFilePath = "/CharacterData.json";
     private string fullSavePath;
     public List<CharacterData> characterList = new List<CharacterData>();
-    private int selectedCharacterIndex = 0;
+    public int selectedCharacterIndex = 0;
     public EXP expScript;
 
     private void Start()
@@ -45,6 +46,15 @@ public class CharacterSelector : MonoBehaviour
         fullSavePath = Application.persistentDataPath + saveFilePath;
         Debug.Log(fullSavePath);
         LoadData();
+
+        // выбираем и покупаем персонажа "Fox" по умолчанию, если он еще не куплен
+        CharacterData foxCharacter = characterList.Find(c => c.name == "Fox");
+        if (foxCharacter != null && !foxCharacter.isBought)
+        {
+            foxCharacter.isBought = true;
+            SelectCharacter(characterList.IndexOf(foxCharacter));
+        }
+
         UpdateCoinsText();
         buyButton.onClick.AddListener(() =>
         {
@@ -65,31 +75,41 @@ public class CharacterSelector : MonoBehaviour
 
     private void LoadData()
     {
-        UnityEngine.TextAsset characterDataAsset = Resources.Load<UnityEngine.TextAsset>("CharacterData");
-        if (characterDataAsset != null)
+        string json = null;
+        if (File.Exists(fullSavePath))
         {
-            string json = characterDataAsset.text;
-            CharacterDataArray characterDataArray = JsonUtility.FromJson<CharacterDataArray>(json);
-            if (characterDataArray != null)
+            json = File.ReadAllText(fullSavePath);
+        }
+        else
+        {
+            UnityEngine.TextAsset characterDataAsset = Resources.Load<UnityEngine.TextAsset>("CharacterData");
+            if (characterDataAsset != null)
             {
-                if (characterDataArray.characters != null)
+                json = characterDataAsset.text;
+            }
+            else
+            {
+                Debug.LogError("Unable to find CharacterData file in Resources");
+                return;
+            }
+        }
+
+        CharacterDataArray characterDataArray = JsonUtility.FromJson<CharacterDataArray>(json);
+        if (characterDataArray != null)
+        {
+            if (characterDataArray.characters != null)
+            {
+                characterList = new List<CharacterData>(characterDataArray.characters);
+                if (characterList.Count > 0)
                 {
-                    characterList = new List<CharacterData>(characterDataArray.characters);
-                    if (characterList.Count > 0)
+                    selectedCharacterIndex = characterDataArray.selectedCharacterIndex;
+                    if (selectedCharacterIndex >= 0 && selectedCharacterIndex < characterList.Count)
                     {
-                        selectedCharacterIndex = characterDataArray.selectedCharacterIndex;
-                        if (selectedCharacterIndex >= 0 && selectedCharacterIndex < characterList.Count)
-                        {
-                            UpdateUI();
-                        }
-                        else
-                        {
-                            Debug.LogError("Invalid selectedCharacterIndex in the saved data");
-                        }
+                        UpdateUI();
                     }
                     else
                     {
-                        Debug.LogError("No characters found in the saved data");
+                        Debug.LogError("Invalid selectedCharacterIndex in the saved data");
                     }
                 }
                 else
@@ -99,12 +119,12 @@ public class CharacterSelector : MonoBehaviour
             }
             else
             {
-                Debug.LogError("Failed to parse CharacterDataArray from JSON");
+                Debug.LogError("No characters found in the saved data");
             }
         }
         else
         {
-            Debug.LogError("Unable to find CharacterData file in Resources");
+            Debug.LogError("Failed to parse CharacterDataArray from JSON");
         }
     }
 
@@ -180,6 +200,7 @@ public class CharacterSelector : MonoBehaviour
         powerText.text = $"{character.strength}";
         speedText.text = $"{character.speed}";
         skillText.text = $"{(character.hasSkill ? "Yes" : "No")}";
+        price.text = character.price.ToString();
 
         Texture2D loadedTexture = Resources.Load<Texture2D>(character.image);
         if (loadedTexture == null)
