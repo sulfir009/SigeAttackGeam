@@ -1391,6 +1391,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 854cccd5dd389b14c804c7aeffebb2b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attackRadiusSprite: {fileID: 0}
+  attackRadiusMaterial: {fileID: 0}
+  attackStartColor: {r: 0, g: 0, b: 0, a: 0}
+  attackEndColor: {r: 1, g: 0, b: 0, a: 1}
+  attackCooldown: 1
   playerTransform: {fileID: 0}
   speed: 5
   chaseDistance: 5
@@ -1724,17 +1729,17 @@ PrefabInstance:
     - target: {fileID: 5286554228024027932, guid: b98ce4098214e844892cf63e9e4712b4,
         type: 3}
       propertyPath: m_Size.x
-      value: 3.46
+      value: 0.9
       objectReference: {fileID: 0}
     - target: {fileID: 5286554228024027932, guid: b98ce4098214e844892cf63e9e4712b4,
         type: 3}
       propertyPath: m_Size.y
-      value: 1.93
+      value: 1.9
       objectReference: {fileID: 0}
     - target: {fileID: 5286554228024027932, guid: b98ce4098214e844892cf63e9e4712b4,
         type: 3}
       propertyPath: m_Size.z
-      value: 2.4
+      value: 1.03
       objectReference: {fileID: 0}
     - target: {fileID: 5286554228024027934, guid: b98ce4098214e844892cf63e9e4712b4,
         type: 3}
@@ -2169,24 +2174,6 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 917297654}
   m_PrefabAsset: {fileID: 0}
---- !u!143 &1162006762
-CharacterController:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1162006754}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 0
-  serializedVersion: 2
-  m_Height: 2
-  m_Radius: 0.5
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0.84, z: 0}
 --- !u!1001 &1250114531
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2248,6 +2235,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5286554228024027934, guid: b98ce4098214e844892cf63e9e4712b4,
+        type: 3}
+      propertyPath: chaseDistance
+      value: 10.69
+      objectReference: {fileID: 0}
+    - target: {fileID: 5286554228024027934, guid: b98ce4098214e844892cf63e9e4712b4,
+        type: 3}
+      propertyPath: attackDistance
+      value: 5.11
       objectReference: {fileID: 0}
     - target: {fileID: 5286554228024028000, guid: b98ce4098214e844892cf63e9e4712b4,
         type: 3}

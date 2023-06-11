@@ -4,6 +4,16 @@ using UnityEngine;
 
 public class MobChaseController : MonoBehaviour
 {
+    public SpriteRenderer attackRadiusSprite;
+    public Material attackRadiusMaterial;
+    public Color attackStartColor = Color.clear;
+    public Color attackEndColor = Color.red;
+
+    enum MobState { Idle, Chasing, Attacking, Waiting }
+    private MobState currentState = MobState.Idle;
+    private bool inAttackRadius = false;
+    public float attackCooldown = 1f;
+
     private bool isDead = false;
     public Transform playerTransform;
     public float speed = 5f;
@@ -40,24 +50,85 @@ public class MobChaseController : MonoBehaviour
         }
         else
         {
-            if (distance <= chaseDistance)
+            if (distance <= chaseDistance && currentState == MobState.Idle)
+            {
+                currentState = MobState.Chasing;
+            }
+            if (currentState == MobState.Chasing)
             {
                 if (distance <= attackDistance)
                 {
-                    mobAnimator.SetTrigger("Attack");
-                    mobAnimator.SetBool("IsIdle", false);
+                    inAttackRadius = true;
+                    StartCoroutine(AttackWithDelay());
+                    currentState = MobState.Attacking;
                 }
                 else
                 {
                     MoveTowards(playerTransform.position);
                     mobAnimator.SetBool("IsRunning", true);
-                    mobAnimator.SetBool("IsIdle", false);
                 }
             }
-            else
+            if (currentState == MobState.Attacking)
             {
+                if (distance > attackDistance)
+                {
+                    inAttackRadius = false;
+                }
                 mobAnimator.SetBool("IsRunning", false);
+                mobAnimator.SetBool("IsIdle", true);
             }
+            if (currentState == MobState.Waiting)
+            {
+                if (distance > attackDistance)
+                {
+                    inAttackRadius = false;
+                    currentState = MobState.Chasing;
+                }
+                else
+                {
+                    mobAnimator.SetBool("IsIdle", true);
+                }
+            }
+        }
+    }
+    public void AttackPlayer()
+    {
+        StartCoroutine(AttackWithDelay());
+    }
+
+    private IEnumerator AttackWithDelay()
+    {
+        attackRadiusSprite.enabled = true;
+
+        float elapsedTime = 0f;
+
+        while (elapsedTime < 3f)
+        {
+            float progress = elapsedTime / 3f;
+            attackRadiusMaterial.color = Color.Lerp(attackStartColor, attackEndColor, progress);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        attackRadiusSprite.enabled = false;
+        if (inAttackRadius)
+        {
+            mobAnimator.SetTrigger("Attack");
+            currentState = MobState.Waiting;
+            StartCoroutine(WaitForNextAttack(attackCooldown));
+        }
+        else
+        {
+            currentState = MobState.Chasing;
+        }
+    }
+
+    private IEnumerator WaitForNextAttack(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        if (currentState == MobState.Waiting)
+        {
+            currentState = MobState.Chasing;
         }
     }
 
@@ -69,15 +140,6 @@ public class MobChaseController : MonoBehaviour
         transform.position += velocity;
         Quaternion targetRotation = Quaternion.LookRotation(direction);
         transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-    }
-
-    public void AttackPlayer()
-    {
-        if (isDead) return;
-        if (Vector3.Distance(transform.position, playerTransform.position) <= attackDistance)
-        {
-            playerTransform.GetComponent<PlayerController>().TakeDamage((int)(mobStrengthController.strength * 0.3f));
-        }
     }
 
     public void TakeDamage(int damage)
@@ -107,7 +169,7 @@ public class MobChaseController : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             playerTransform = other.transform;
-            StartCoroutine(BattleCooldown(10f));
+            StartCoroutine(BattleCooldown(3f));
         }
     }
 

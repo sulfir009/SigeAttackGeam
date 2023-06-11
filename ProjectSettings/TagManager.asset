@@ -10,6 +10,7 @@ TagManager:
   - CoutPlayer3
   - CoutPlayer4
   - Enemy
+  - Mob
   layers:
   - Default
   - TransparentFX

@@ -1822,7 +1822,6 @@ GameObject:
   - component: {fileID: 3333972907935965291}
   - component: {fileID: 3333972907935965284}
   - component: {fileID: 3333972907935965285}
-  - component: {fileID: 3333972907935965287}
   m_Layer: 0
   m_Name: Master
   m_TagString: Player
@@ -1975,33 +1974,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1.76, z: 1}
   m_Center: {x: 0, y: 0.87, z: 0}
---- !u!114 &3333972907935965287
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3333028243101499878}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2064d122dd653c2419b2c75781df5bc7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  deathMessage: {fileID: 0}
-  buttonRoll: {fileID: 0}
-  playerTransform: {fileID: 3338617876916189094}
-  characterController: {fileID: 3333972907935965291}
-  speed: 3
-  joystick: {fileID: 0}
-  runSpeed: 6
-  controllCamera: {fileID: 0}
-  playerAnimator: {fileID: 3391250793892952894}
-  playerPower: 10
-  alliedMobs: []
-  rotationSpeed: 10
-  attackRange: 2
-  runButton: {fileID: 0}
-  attackButton: {fileID: 0}
 --- !u!1 &3333030160579214458
 GameObject:
   m_ObjectHideFlags: 0
@@ -4646,7 +4618,7 @@ PrefabInstance:
         type: 3}
       propertyPath: playerController
       value: 
-      objectReference: {fileID: 3333972907935965287}
+      objectReference: {fileID: 0}
     - target: {fileID: 4817615917061287411, guid: c20984d7ca2740741aa04504d99b0420,
         type: 3}
       propertyPath: m_RootOrder

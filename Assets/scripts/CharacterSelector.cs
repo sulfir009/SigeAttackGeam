@@ -34,6 +34,7 @@ public class CharacterSelector : MonoBehaviour
     public RawImage image;
     public TMP_Text coinsText;
     public Button buyButton;
+    public Button uppButton;
     public Button selectButton;
     public string saveFilePath = "/CharacterData.json";
     private string fullSavePath;
@@ -43,6 +44,7 @@ public class CharacterSelector : MonoBehaviour
 
     private void Start()
     {
+        uppButton.onClick.AddListener(UpgradeCharacter);
         fullSavePath = Application.persistentDataPath + saveFilePath;
         Debug.Log(fullSavePath);
         LoadData();
@@ -70,6 +72,34 @@ public class CharacterSelector : MonoBehaviour
             {
                 SelectCharacter(index);
             });
+        }
+    }
+    public void UpgradeCharacter()
+    {
+        if (selectedCharacterIndex < 0 || selectedCharacterIndex >= characterList.Count)
+        {
+            Debug.LogError("Invalid character index");
+            return;
+        }
+
+        CharacterData selectedCharacter = characterList[selectedCharacterIndex];
+        if (!selectedCharacter.isBought)
+        {
+            Debug.LogError("Character not bought");
+            return;
+        }
+
+        if (expScript.Coins >= selectedCharacter.price)
+        {
+            expScript.BuyCharacter(selectedCharacter.price); // уменьшаем количество монет
+            selectedCharacter.strength += 2; // улучшаем силу персонажа
+            selectedCharacter.price = (int)(selectedCharacter.price + 120f); // увеличиваем цену следующего улучшения
+            UpdateUI();
+            SaveData();
+        }
+        else
+        {
+            Debug.LogError("Not enough coins to upgrade character");
         }
     }
 
@@ -189,6 +219,7 @@ public class CharacterSelector : MonoBehaviour
 
     private void UpdateUI()
     {
+       
         if (selectedCharacterIndex < 0 || selectedCharacterIndex >= characterList.Count)
         {
             Debug.LogError("Invalid character index");
@@ -196,6 +227,7 @@ public class CharacterSelector : MonoBehaviour
         }
 
         CharacterData character = characterList[selectedCharacterIndex];
+        uppButton.gameObject.SetActive(character.isBought);
         nameText.text = character.name;
         powerText.text = $"{character.strength}";
         speedText.text = $"{character.speed}";

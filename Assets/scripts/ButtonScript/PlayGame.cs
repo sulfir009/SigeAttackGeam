@@ -8,7 +8,7 @@ using static CharacterSelector;
 public class PlayGame : MonoBehaviour
 {
     private CharacterSelector characterSelector;
-    public TextMeshProUGUI errorText;
+    public GameObject errorText;
     // Start is called before the first frame update
     void Start()
     {
@@ -20,12 +20,18 @@ public class PlayGame : MonoBehaviour
     {
         
     }
+    IEnumerator DisplayError()
+    {
+        errorText.active = true;
+        yield return new WaitForSeconds(3f);
+        errorText.active = false;
+    }
     public void Load()
     {
         if (GlobalContext.SelectedCharacter == null)
         {
             // Display error message
-            errorText.text = "Please select a character before starting the game.";
+            StartCoroutine(DisplayError());
         }
         else
         {

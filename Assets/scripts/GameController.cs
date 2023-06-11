@@ -48,7 +48,10 @@ public class GameController : MonoBehaviour
         playerController.playerAnimator = player.GetComponent<Animator>();
         playerController.runButton = GameObject.Find("Speed").GetComponent<Button>();
         playerController.attackButton = GameObject.Find("Attak").GetComponent<Button>();
-
+        foreach (MobChaseController mob in FindObjectsOfType<MobChaseController>())
+        {
+            mob.playerTransform = player.transform;
+        }
         GameObject mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
         if (mainCamera != null)
         {
