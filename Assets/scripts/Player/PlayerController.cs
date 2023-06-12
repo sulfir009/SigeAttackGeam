@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -29,6 +30,8 @@ public class PlayerController : MonoBehaviour
     private Vector3 moveDirection = Vector3.zero;
     public float attackRange = 2.0f;  // Добавлено
 
+    public int point = 0;
+    public Text pointText;
 
     public Button runButton;
     public Button attackButton;
@@ -85,6 +88,8 @@ public class PlayerController : MonoBehaviour
         }
 
         controllCamera.enabled = true;
+
+        pointText.text = "Point`s" + point.ToString();
     }
 
 
@@ -107,7 +112,23 @@ public class PlayerController : MonoBehaviour
             isDead = true;
             // Implement game over logic here
             deathMessage.text = "Your character has died.";
-            // Implement game over logic here
+
+            // Зчитування попередніх даних з файлу та додавання нових значень
+            string json = File.ReadAllText("Point.json");
+            List<int> values = new List<int>();
+
+            // Десеріалізація попередніх даних
+            if (!string.IsNullOrEmpty(json))
+            {
+                values = JsonUtility.FromJson<List<int>>(json);
+            }
+
+            // Додавання нового значення
+            values.Add(point);
+
+            // Серіалізація та збереження оновлених даних у файл
+            string updatedJson = JsonUtility.ToJson(values);
+            File.WriteAllText("Point.json", updatedJson);
         }
     }
     public void AddAlliedMob(MobChaseController mob)

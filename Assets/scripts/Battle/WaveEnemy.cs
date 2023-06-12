@@ -9,12 +9,16 @@ public class WaveEnemy : MonoBehaviour
     public GameObject enemyPrefab; //модель персонажа
     public int spawnEnemyCount = 1; // кількість ворогів
     public List<Transform> spawner; // спавнери
-    public float timeToRespawn; //час до респавна юнітів
+    
     public float exctraTimeSpawn = 10f; //час досрочного спавна юнітів
     private int enemyCount;
     //таймер
     public Text timerText;
 
+    public int waveNumber = 1;
+    public MobStrengthController mobStrengthController;
+
+    public PlayerController playerController;
 
     void Start()
     {
@@ -33,6 +37,11 @@ public class WaveEnemy : MonoBehaviour
         //якщо ворогів немає, або час закінчився
         if (enemyCount == 0 || exctraTimeSpawn < 0)
         {
+            playerController.point += 10;
+            //збільшення сили ворогів
+            waveNumber++;
+            mobStrengthController.SetStrength(waveNumber * 5);
+
             SpawnEnemyWave(spawnEnemyCount);
             //повертаємо час для досрочного спавну
             exctraTimeSpawn = 10f;
