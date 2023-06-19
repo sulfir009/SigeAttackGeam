@@ -18,8 +18,6 @@ public class WaveEnemy : MonoBehaviour
     public int waveNumber = 1;
     public MobStrengthController mobStrengthController;
 
-    public PlayerController playerController;
-
     void Start()
     {
         SpawnEnemyWave(spawnEnemyCount);
@@ -37,7 +35,7 @@ public class WaveEnemy : MonoBehaviour
         //якщо ворогів немає, або час закінчився
         if (enemyCount == 0 || exctraTimeSpawn < 0)
         {
-            playerController.point += 10;
+            
             //збільшення сили ворогів
             waveNumber++;
             mobStrengthController.SetStrength(waveNumber * 5);
@@ -56,7 +54,7 @@ public class WaveEnemy : MonoBehaviour
         float spawnPosZ = Random.Range(-10, 10);
 
         Vector3 randomPos = new Vector3(spawner[indexSpawner].transform.position.x + spawnPosX,
-            0, spawner[indexSpawner].transform.position.z + spawnPosZ);
+            1, spawner[indexSpawner].transform.position.z + spawnPosZ);
 
         return randomPos;
 

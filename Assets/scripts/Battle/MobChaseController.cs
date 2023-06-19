@@ -16,7 +16,7 @@ public class MobChaseController : MonoBehaviour
 
     private bool isDead = false;
     public Transform playerTransform;
-    public float speed = 5f;
+    public float speed = 10f;
     public float chaseDistance = 5f;
     public float attackDistance = 2f;
     public bool isAlly = false;
@@ -24,7 +24,7 @@ public class MobChaseController : MonoBehaviour
     public Animator mobAnimator;
     public float idleDistanceThreshold = 2f;
     public float rotationSpeed = 2f;
-    public PlayerController playerController;
+    private PlayerController playerController;
     public static Dictionary<int, MobChaseController> mobControllers = new Dictionary<int, MobChaseController>();
     private int id;
     private static int nextId = 0;
@@ -33,6 +33,7 @@ public class MobChaseController : MonoBehaviour
 
     private void Start()
     {
+        playerController = FindObjectOfType<PlayerController>();
         playerTransform = GameObject.FindWithTag("Player").transform;
         mobAnimator = GetComponent<Animator>();
         id = nextId++;
@@ -145,8 +146,9 @@ public class MobChaseController : MonoBehaviour
     public void TakeDamage(int damage)
     {
         if (isDead) {
-
             playerController.point += 10;
+            mobControllers.Remove(id);
+            Destroy(gameObject);        
             return; }
         mobStrengthController.DecreaseStrength(damage);
 
@@ -155,7 +157,7 @@ public class MobChaseController : MonoBehaviour
             mobAnimator.SetTrigger("Death");
             isDead = true;
             playerController.playerPower += StartStrength / 2;
-            DeathAndDisappear(1f);
+           // DeathAndDisappear(1f);
         }
     }
 

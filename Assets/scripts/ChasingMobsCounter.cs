@@ -10,6 +10,10 @@ public class ChasingMobsCounter : MonoBehaviour
 
     private List<MobChaseController> chasingMobs = new List<MobChaseController>();
 
+    private void Start() {
+        playerController = FindObjectOfType<PlayerController>();
+    }
+
     private void Update()
     {
         UpdateChasingMobsText();

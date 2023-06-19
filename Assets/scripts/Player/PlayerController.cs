@@ -89,7 +89,7 @@ public class PlayerController : MonoBehaviour
 
         controllCamera.enabled = true;
 
-        pointText.text = "Point`s" + point.ToString();
+        pointText.text = "Point`s " + point.ToString();
     }
 
 

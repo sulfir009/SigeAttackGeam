@@ -39,6 +39,7 @@ public class GameController : MonoBehaviour
         GameObject player = Instantiate(characterPrefab, playerSpawnPoint.position, playerSpawnPoint.rotation);
         PlayerController playerController = player.AddComponent<PlayerController>();
         playerController.playerPower = GlobalContext.SelectedCharacter.strength; // Пример присвоения силы персонажу
+        //playerController.playerPower = 10000;
         playerController.speed = GlobalContext.SelectedCharacter.speed; // Пример присвоения speed персонажу
 
         playerController.joystick = GameObject.Find("Dynamic Joystick").GetComponent<DynamicJoystick>();
@@ -48,6 +49,7 @@ public class GameController : MonoBehaviour
         playerController.playerAnimator = player.GetComponent<Animator>();
         playerController.runButton = GameObject.Find("Speed").GetComponent<Button>();
         playerController.attackButton = GameObject.Find("Attak").GetComponent<Button>();
+        playerController.pointText = GameObject.Find("TextPoint").GetComponent<Text>();
         foreach (MobChaseController mob in FindObjectsOfType<MobChaseController>())
         {
             mob.playerTransform = player.transform;
