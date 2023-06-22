@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour
     public TextMeshProUGUI deathMessage; // новое поле для отображения сообщения о смерти
     private bool isDead = false; // новая переменная для отслеживания смерти персонажа
     bool IsRoll = false;
+    public TextMeshProUGUI power;
     public Button buttonRoll;
     public Transform playerTransform;
     public CharacterController characterController;
@@ -37,6 +38,7 @@ public class PlayerController : MonoBehaviour
     public Button attackButton;
     private void Start()
     {
+        power.text = playerPower.ToString();
         joystick.DeadZone = 0.1f; // Уменьшить Dead Zone
         runButton.onClick.AddListener(ToggleRun);
         attackButton.onClick.AddListener(Attack);

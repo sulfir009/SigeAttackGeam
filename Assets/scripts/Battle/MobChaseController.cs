@@ -6,17 +6,22 @@ public class MobChaseController : MonoBehaviour
 {
     public SpriteRenderer attackRadiusSprite;
     public Material attackRadiusMaterial;
+    private CharacterController characterController;
+    private float gravity = -9.81f; // Добавить гравитацию, если объект находится на земле
+
     public Color attackStartColor = Color.clear;
     public Color attackEndColor = Color.red;
-
-    enum MobState { Idle, Chasing, Attacking, Waiting }
-    private MobState currentState = MobState.Idle;
     private bool inAttackRadius = false;
-    public float attackCooldown = 1f;
-
+    public float attackCooldown = 3f;
+    private bool isAttacking = false;
     private bool isDead = false;
     public Transform playerTransform;
+<<<<<<< Updated upstream
     public float speed = 10f;
+=======
+    public float speed = 5f;
+    public float startChasingDistance = 50f;
+>>>>>>> Stashed changes
     public float chaseDistance = 5f;
     public float attackDistance = 2f;
     public bool isAlly = false;
@@ -29,120 +34,123 @@ public class MobChaseController : MonoBehaviour
     private int id;
     private static int nextId = 0;
     private static int StartStrength = 0;
-    private CharacterController characterController;
+    private Rigidbody rb;
+    private float attackDelay = 1f;
+    int groundLayerMask;
 
     private void Start()
     {
+<<<<<<< Updated upstream
         playerController = FindObjectOfType<PlayerController>();
+=======
+        groundLayerMask = LayerMask.GetMask("Ground");
+        characterController = GetComponent<CharacterController>();
+>>>>>>> Stashed changes
         playerTransform = GameObject.FindWithTag("Player").transform;
         mobAnimator = GetComponent<Animator>();
         id = nextId++;
         mobControllers.Add(id, this);
-        characterController = GetComponent<CharacterController>();
+        rb = GetComponent<Rigidbody>();
+        playerController = playerTransform.GetComponent<PlayerController>(); // Добавлено
+        StartCoroutine(StartChasing());
     }
-
     private void Update()
     {
         float distance = Vector3.Distance(transform.position, playerTransform.position);
-        if (isDead) return;
-
-        if (isAlly)
+        if (!isAttacking && distance <= attackDistance)
         {
+            StartCoroutine(PrepareAndAttack());
         }
-        else
+    }
+
+    private IEnumerator StartChasing()
+    {
+        while (true)
         {
-            if (distance <= chaseDistance && currentState == MobState.Idle)
+            float distance = Vector3.Distance(transform.position, playerTransform.position);
+            if (distance <= startChasingDistance && distance > attackDistance)
             {
-                currentState = MobState.Chasing;
+                MoveTowards(playerTransform.position);
+                mobAnimator.SetBool("IsRunning", true);
             }
-            if (currentState == MobState.Chasing)
+            else
             {
-                if (distance <= attackDistance)
-                {
-                    inAttackRadius = true;
-                    StartCoroutine(AttackWithDelay());
-                    currentState = MobState.Attacking;
-                }
-                else
-                {
-                    MoveTowards(playerTransform.position);
-                    mobAnimator.SetBool("IsRunning", true);
-                }
-            }
-            if (currentState == MobState.Attacking)
-            {
-                if (distance > attackDistance)
-                {
-                    inAttackRadius = false;
-                }
                 mobAnimator.SetBool("IsRunning", false);
-                mobAnimator.SetBool("IsIdle", true);
             }
-            if (currentState == MobState.Waiting)
-            {
-                if (distance > attackDistance)
-                {
-                    inAttackRadius = false;
-                    currentState = MobState.Chasing;
-                }
-                else
-                {
-                    mobAnimator.SetBool("IsIdle", true);
-                }
-            }
-        }
-    }
-    public void AttackPlayer()
-    {
-        StartCoroutine(AttackWithDelay());
-    }
-
-    private IEnumerator AttackWithDelay()
-    {
-        attackRadiusSprite.enabled = true;
-
-        float elapsedTime = 0f;
-
-        while (elapsedTime < 3f)
-        {
-            float progress = elapsedTime / 3f;
-            attackRadiusMaterial.color = Color.Lerp(attackStartColor, attackEndColor, progress);
-            elapsedTime += Time.deltaTime;
             yield return null;
         }
-
-        attackRadiusSprite.enabled = false;
-        if (inAttackRadius)
-        {
-            mobAnimator.SetTrigger("Attack");
-            currentState = MobState.Waiting;
-            StartCoroutine(WaitForNextAttack(attackCooldown));
-        }
-        else
-        {
-            currentState = MobState.Chasing;
-        }
+    }
+    private IEnumerator PrepareAndAttack()
+    {
+        isAttacking = true;
+        AttackPlayer();
+        yield return new WaitForSeconds(attackCooldown);
+        ResetAttackState();
     }
 
-    private IEnumerator WaitForNextAttack(float delay)
+
+    private IEnumerator DisplayAttackRadius()
     {
-        yield return new WaitForSeconds(delay);
-        if (currentState == MobState.Waiting)
+        inAttackRadius = true;
+        float progress = 0f;
+        while (progress <= 1f)
         {
-            currentState = MobState.Chasing;
+            attackRadiusMaterial.color = Color.Lerp(attackStartColor, attackEndColor, progress);
+            progress += Time.deltaTime;
+            yield return null;
         }
+        inAttackRadius = false;
+        attackRadiusMaterial.color = attackStartColor;
     }
 
     private void MoveTowards(Vector3 target)
     {
         if (isDead) return;
         Vector3 direction = (target - transform.position).normalized;
-        Vector3 velocity = direction * speed * Time.deltaTime;
-        transform.position += velocity;
+
+        // Обновить для использования CharacterController.Move вместо Rigidbody.MovePosition
+        direction.y = gravity * Time.deltaTime; // Добавить гравитацию, если объект находится на земле
+        characterController.Move(direction * speed * Time.deltaTime);
+
         Quaternion targetRotation = Quaternion.LookRotation(direction);
         transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
     }
+    void LateUpdate()
+    {
+        UpdateAttackRadiusPosition();
+    }
+    void UpdateAttackRadiusPosition()
+    {
+        Ray groundRay = new Ray(transform.position, Vector3.down);
+        RaycastHit hit;
 
+        if (Physics.Raycast(groundRay, out hit, Mathf.Infinity, groundLayerMask))
+        {
+            Vector3 radiusPosition = attackRadiusSprite.transform.position;
+            radiusPosition.y = hit.point.y;
+            attackRadiusSprite.transform.position = radiusPosition;
+        }
+    }
+    public void AttackPlayer()
+    {
+        if (isDead) return;
+        if (Vector3.Distance(transform.position, playerTransform.position) <= attackDistance)
+        {
+            StartCoroutine(DisplayAttackRadius());  // Добавлено
+            mobAnimator.SetTrigger("Attack");
+            playerTransform.GetComponent<PlayerController>().TakeDamage((int)(mobStrengthController.strength * 0.3f));
+        }
+    }
+    private IEnumerator AttackCooldown()
+    {
+        yield return new WaitForSeconds(attackCooldown);
+        ResetAttackState();
+    }
+    public void ResetAttackState()
+    {
+        isAttacking = false;
+        mobAnimator.ResetTrigger("Attack");
+    }
     public void TakeDamage(int damage)
     {
         if (isDead) {
@@ -168,32 +176,5 @@ public class MobChaseController : MonoBehaviour
         };
         mobControllers.Remove(id);
         Destroy(gameObject);
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (isDead) return;
-        if (other.gameObject.CompareTag("Player"))
-        {
-            playerTransform = other.transform;
-            StartCoroutine(BattleCooldown(3f));
-        }
-    }
-
-    private IEnumerator BattleCooldown(float duration)
-    {
-        StartStrength = mobStrengthController.strength;
-
-        yield return new WaitForSeconds(duration);
-    }
-
-    private void OnControllerColliderHit(ControllerColliderHit hit)
-    {
-        if (isDead) return;
-        if (hit.gameObject.CompareTag("Player"))
-        {
-            playerTransform = hit.transform;
-            AttackPlayer();
-        }
     }
 }

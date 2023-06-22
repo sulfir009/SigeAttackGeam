@@ -429,7 +429,6 @@
 "Assets/scripts/ButtonScript/PlayGame.cs"
 "Assets/scripts/CameraScriptReloader.cs"
 "Assets/scripts/CharacterSelector.cs"
-"Assets/scripts/ChasingMobsCounter.cs"
 "Assets/scripts/ControllCamera.cs"
 "Assets/scripts/EXP.cs"
 "Assets/scripts/GameController.cs"

@@ -25,6 +25,7 @@ public class WaveEnemy : MonoBehaviour
     }
 
     void Update()
+
     {
         //кількість об'єктів з тегом Ворог
         GameObject[] obj = GameObject.FindGameObjectsWithTag("Enemy");

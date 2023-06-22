@@ -39,7 +39,7 @@ public class CharacterSelector : MonoBehaviour
     public string saveFilePath = "/CharacterData.json";
     private string fullSavePath;
     public List<CharacterData> characterList = new List<CharacterData>();
-    public int selectedCharacterIndex = 0;
+    public int selectedCharacterIndex = 2;
     public EXP expScript;
 
     private void Start()
@@ -50,7 +50,7 @@ public class CharacterSelector : MonoBehaviour
         LoadData();
 
         // выбираем и покупаем персонажа "Fox" по умолчанию, если он еще не куплен
-        CharacterData foxCharacter = characterList.Find(c => c.name == "Fox");
+        CharacterData foxCharacter = characterList.Find(c => c.name == "-");
         if (foxCharacter != null && !foxCharacter.isBought)
         {
             foxCharacter.isBought = true;

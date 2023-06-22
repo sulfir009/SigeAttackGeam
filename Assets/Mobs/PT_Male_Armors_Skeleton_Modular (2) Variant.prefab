@@ -52,7 +52,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: fed8951615910ab448b0038c7926d7a6, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -108,14 +108,49 @@ PrefabInstance:
       objectReference: {fileID: 5286554228024027930}
     - target: {fileID: 962722006114918392, guid: 16942c5fc1046e644ac26a866133a033,
         type: 3}
+      propertyPath: attackCooldown
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 962722006114918392, guid: 16942c5fc1046e644ac26a866133a033,
+        type: 3}
+      propertyPath: attackDistance
+      value: 4.99
+      objectReference: {fileID: 0}
+    - target: {fileID: 962722006114918392, guid: 16942c5fc1046e644ac26a866133a033,
+        type: 3}
       propertyPath: attackRadiusSprite
       value: 
       objectReference: {fileID: 6205446211054596895}
     - target: {fileID: 962722006114918392, guid: 16942c5fc1046e644ac26a866133a033,
         type: 3}
+      propertyPath: attackStartColor.a
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 962722006114918392, guid: 16942c5fc1046e644ac26a866133a033,
+        type: 3}
+      propertyPath: attackStartColor.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 962722006114918392, guid: 16942c5fc1046e644ac26a866133a033,
+        type: 3}
+      propertyPath: attackStartColor.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 962722006114918392, guid: 16942c5fc1046e644ac26a866133a033,
+        type: 3}
+      propertyPath: attackStartColor.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 962722006114918392, guid: 16942c5fc1046e644ac26a866133a033,
+        type: 3}
       propertyPath: attackRadiusMaterial
       value: 
       objectReference: {fileID: 2100000, guid: fed8951615910ab448b0038c7926d7a6, type: 2}
+    - target: {fileID: 962722006114918392, guid: 16942c5fc1046e644ac26a866133a033,
+        type: 3}
+      propertyPath: startChasingDistance
+      value: 10.88
+      objectReference: {fileID: 0}
     - target: {fileID: 962722006114918392, guid: 16942c5fc1046e644ac26a866133a033,
         type: 3}
       propertyPath: mobStrengthController
