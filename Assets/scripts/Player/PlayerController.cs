@@ -186,7 +186,10 @@ public class PlayerController : MonoBehaviour
             StartCoroutine(AttackCooldown(0.8f));
         }
     }
-
+    public void RefreshPoints()
+    {
+        pointText.text = "Point`s " + point.ToString();
+    }
     private IEnumerator AttackCooldown(float duration)
     {
         isAtacket = false;

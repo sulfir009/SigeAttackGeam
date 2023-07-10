@@ -166,10 +166,6 @@
     <Compile Include="Assets\#NVJOB Water Shaders V2\Example Scenes\PostProcessing\Runtime\Models\BloomModel.cs" />
     <Compile Include="Assets\#NVJOB Water Shaders V2\Example Scenes\PostProcessing\Runtime\Models\MotionBlurModel.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01.cs" />
-    <Compile Include="Assets\scripts\Battle\Battle\MobBattleController.cs" />
-    <Compile Include="Assets\scripts\Battle\Battle\MobChaseController.cs" />
-    <Compile Include="Assets\scripts\Battle\Battle\MobStrengthController.cs" />
-    <Compile Include="Assets\scripts\Battle\Battle\WaveEnemy.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\#NVJOB Water Shaders V2\Example Scenes\PostProcessing\Editor Resources\Monitors\WaveformRender.shader" />

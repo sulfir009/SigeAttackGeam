@@ -10,10 +10,10 @@ public class MobChaseController : MonoBehaviour
     public Color attackEndColor = Color.red;
     public LayerMask groundLayerMask;
 
-    enum MobState { Idle, Chasing, Attacking, Waiting }
+    enum MobState { Idle, Chasing, PreparingAttack, Attacking, Waiting }
     private MobState currentState = MobState.Idle;
     private bool inAttackRadius = false;
-    public float attackCooldown = 1f;
+    public float attackCooldown = 2f;
 
     public List<UltimateAbility> ultimateAbilities;
     private float ultimateAbilityCooldownTimer = 0f;
@@ -34,6 +34,8 @@ public class MobChaseController : MonoBehaviour
     private static int nextId = 0;
     private static int StartStrength = 0;
     private CharacterController characterController;
+    private Coroutine currentMoveCoroutine = null;
+
 
     private void Start()
     {
@@ -43,6 +45,7 @@ public class MobChaseController : MonoBehaviour
         id = nextId++;
         mobControllers.Add(id, this);
         characterController = GetComponent<CharacterController>();
+        attackRadiusMaterial.color = new Color(attackRadiusMaterial.color.r, attackRadiusMaterial.color.g, attackRadiusMaterial.color.b, 0.5f);
     }
 
     private void Update()
@@ -52,6 +55,7 @@ public class MobChaseController : MonoBehaviour
             attackRadiusSprite.enabled = false;
         }
         float distance = Vector3.Distance(transform.position, playerTransform.position);
+        inAttackRadius = distance <= attackDistance;
         if (isDead) return;
 
         if (ultimateAbilityCooldownTimer <= 0 && currentState == MobState.Attacking)
@@ -65,64 +69,120 @@ public class MobChaseController : MonoBehaviour
             ultimateAbilityCooldownTimer -= Time.deltaTime;
         }
 
-        if (isAlly)
+        switch (currentState)
         {
-        }
-        else
-        {
-            if (distance <= chaseDistance && currentState == MobState.Idle)
-            {
-                currentState = MobState.Chasing;
-            }
-            if (currentState == MobState.Chasing)
-            {
-                if (distance <= attackDistance)
+            case MobState.Idle:
+                if (distance <= chaseDistance)
                 {
-                    inAttackRadius = true;
-                    StartCoroutine(AttackWithDelay());
-                    currentState = MobState.Attacking;
-                }
-                else
-                {
-                    MoveTowards(playerTransform.position);
-                    mobAnimator.SetBool("IsRunning", true);
-                }
-            }
-            if (currentState == MobState.Attacking)
-            {
-                if (distance > attackDistance)
-                {
-                    inAttackRadius = false;
-                }
-                mobAnimator.SetBool("IsRunning", false);
-                mobAnimator.SetBool("IsIdle", true);
-            }
-            if (currentState == MobState.Waiting)
-            {
-                if (distance > attackDistance)
-                {
-                    inAttackRadius = false;
                     currentState = MobState.Chasing;
                 }
+                break;
+
+            case MobState.Chasing:
+                if (distance <= attackDistance)
+                {
+                    if (currentMoveCoroutine != null)
+                    {
+                        StopCoroutine(currentMoveCoroutine);
+                        currentMoveCoroutine = null;
+                    }
+                    currentState = MobState.PreparingAttack;
+                    StartCoroutine(AttackWithDelay());
+                }
                 else
                 {
-                    mobAnimator.SetBool("IsIdle", true);
+                    if (currentMoveCoroutine == null)
+                    {
+                        currentMoveCoroutine = StartCoroutine(MoveTowardsCoroutine(playerTransform.position));
+                    }
                 }
-            }
+                break;
+
+            case MobState.PreparingAttack:
+                mobAnimator.SetBool("IsRunning", false);
+                mobAnimator.SetBool("IsIdle", false);
+                if (distance > attackDistance)
+                {
+                    currentState = MobState.Chasing;
+                }
+                break;
+
+            case MobState.Attacking:
+                mobAnimator.SetBool("IsRunning", false);
+                mobAnimator.SetBool("IsIdle", false);
+                if (distance > attackDistance)
+                {
+                    currentState = MobState.Chasing;
+                }
+                break;
+
+            case MobState.Waiting:
+                mobAnimator.SetBool("IsIdle", true);
+                if (distance > attackDistance)
+                {
+                    currentState = MobState.Chasing;
+                }
+                break;
         }
+    }
+    private IEnumerator MoveTowardsCoroutine(Vector3 target)
+    {
+        mobAnimator.SetBool("IsRunning", true);
+
+        while (Vector3.Distance(transform.position, target) > attackDistance)
+        {
+            if (currentState != MobState.Chasing)
+            {
+                mobAnimator.SetBool("IsRunning", false);
+                yield break;
+            }
+
+            Vector3 direction = (target - transform.position).normalized;
+            Vector3 velocity = direction * speed * Time.deltaTime;
+
+            if (Physics.Raycast(transform.position, -transform.up, 1.5f, groundLayerMask))
+            {
+                velocity.y = 0;
+            }
+
+            characterController.Move(velocity);
+
+            Quaternion targetRotation = Quaternion.LookRotation(direction);
+            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+
+            yield return null;
+        }
+
+        mobAnimator.SetBool("IsRunning", false);
     }
     public void AttackPlayer()
     {
-        if (currentState != MobState.Chasing && currentState != MobState.Attacking)
-            return;
-
-        StartCoroutine(AttackWithDelay());
+        if (currentState == MobState.Chasing || currentState == MobState.Attacking)
+        {
+            StartCoroutine(AttackWithDelay());
+        }
     }
+
     public void AttackAnimation()
     {
-        StartCoroutine(AttackWithDelay());
-        mobAnimator.SetTrigger("Attack");
+        if (currentState == MobState.Chasing || currentState == MobState.Attacking)
+        {
+            StartCoroutine(AttackWithDelay());
+            mobAnimator.SetTrigger("Attack");
+        }
     }
+
+    private IEnumerator PostAttackDelay(float delay)
+    {
+        currentState = MobState.Waiting;
+        yield return new WaitForSeconds(delay);
+        if (currentState == MobState.Waiting)
+        {
+            currentState = MobState.Idle;
+        }
+    }
+
+
     public abstract class UltimateAbility : ScriptableObject
     {
         public string abilityName;
@@ -134,42 +194,47 @@ public class MobChaseController : MonoBehaviour
 
         public abstract IEnumerator UseAbility(MobChaseController mobController);
     }
-    private IEnumerator PostAttackDelay(float delay)
-    {
-        currentState = MobState.Waiting;
-        yield return new WaitForSeconds(delay);
-        if (currentState == MobState.Waiting)
-        {
-            currentState = MobState.Chasing;
-        }
-    }
+
     private IEnumerator AttackWithDelay()
     {
-        if (inAttackRadius)
+        mobAnimator.SetTrigger("Attack");
+        attackRadiusSprite.enabled = true;
+
+        float t = 0;
+        while (t < 1)
         {
-            mobAnimator.SetTrigger("Attack");
-            currentState = MobState.Waiting;
-            attackRadiusSprite.enabled = true;
+            t += Time.deltaTime / 2; // На это уйдут 2 секунды
+            attackRadiusMaterial.color = Color.Lerp(attackStartColor, attackEndColor, t);
+            yield return null;
 
-            float t = 0;
-            while (t < 1)
+            if (!inAttackRadius) // проверяем, в зоне ли атаки игрок
             {
-                t += Time.deltaTime / attackCooldown;
-                attackRadiusMaterial.color = Color.Lerp(attackStartColor, attackEndColor, t);
-                yield return null;
-            }
-
-            yield return new WaitForSeconds(attackCooldown);
-            if (currentState == MobState.Waiting)
-            {
+                attackRadiusSprite.enabled = false;
+                attackRadiusMaterial.color = attackStartColor;
                 currentState = MobState.Chasing;
+                yield break;
             }
-            // Дальше ваш код...
         }
+
+        // После 2 секунд происходит атака игрока
+        if (inAttackRadius) // атакуем, только если игрок все еще в радиусе атаки
+        {
+            int damageToPlayer = mobStrengthController.strength / 3; // вычисляем урон игроку
+            playerController.TakeDamage(damageToPlayer); // вызываем метод TakeDamage у игрока
+
+            // Set state to attacking
+            currentState = MobState.Attacking;
+        }
+
+        // после атаки ждем остальную часть кулдауна атаки
+        yield return new WaitForSeconds(attackCooldown); // Вычитаем 2 секунды, потому что уже ждали 2 секунды
+
+        // после кулдауна атаки ожидаем следующую атаку
+        StartCoroutine(WaitForNextAttack(attackCooldown));
+
+        attackRadiusSprite.enabled = false;
+        attackRadiusMaterial.color = attackStartColor;
     }
-
-
-
 
 
     private IEnumerator WaitForNextAttack(float delay)
@@ -177,7 +242,7 @@ public class MobChaseController : MonoBehaviour
         yield return new WaitForSeconds(delay);
         if (currentState == MobState.Waiting)
         {
-            currentState = MobState.Chasing;
+            currentState = MobState.Idle;
         }
     }
 
@@ -204,57 +269,25 @@ public class MobChaseController : MonoBehaviour
         if (isDead)
         {
             playerController.point += 10;
+            playerController.RefreshPoints();
             mobControllers.Remove(id);
             Destroy(gameObject);
-            return;
         }
-        mobStrengthController.DecreaseStrength(damage);
-
+        else
+        {
+            mobStrengthController.strength -= damage;
+            if (mobStrengthController.strength <= 0)
+            {
+                isDead = true;
+            }
+        }
         if (mobStrengthController.strength <= 0)
         {
-            mobAnimator.SetTrigger("Death");
             isDead = true;
-            playerController.playerPower += StartStrength / 2;
-            StartCoroutine(DeathAndDisappear(1f));
-        }
-    }
-
-    private IEnumerator DeathAndDisappear(float delay)
-    {
-        while (delay > 0)
-        {
-            delay -= Time.deltaTime;
-            yield return null;
-        };
-        mobControllers.Remove(id);
-        Destroy(gameObject);
-        yield break;
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (isDead) return;
-        if (other.gameObject.CompareTag("Player"))
-        {
-            playerTransform = other.transform;
-            StartCoroutine(BattleCooldown(3f));
-        }
-    }
-
-    private IEnumerator BattleCooldown(float duration)
-    {
-        StartStrength = mobStrengthController.strength;
-
-        yield return new WaitForSeconds(duration);
-    }
-
-    private void OnControllerColliderHit(ControllerColliderHit hit)
-    {
-        if (isDead) return;
-        if (hit.gameObject.CompareTag("Player"))
-        {
-            playerTransform = hit.transform;
-            AttackPlayer();
+            playerController.point += 10;
+            playerController.RefreshPoints();
+            mobControllers.Remove(id);
+            Destroy(gameObject);
         }
     }
 }
