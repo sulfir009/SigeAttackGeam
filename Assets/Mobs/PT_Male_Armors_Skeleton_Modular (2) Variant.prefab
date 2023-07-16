@@ -91,6 +91,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 962722004965875550, guid: 16942c5fc1046e644ac26a866133a033,
+        type: 3}
+      propertyPath: m_Text
+      value: 155
+      objectReference: {fileID: 0}
     - target: {fileID: 962722006114918278, guid: 16942c5fc1046e644ac26a866133a033,
         type: 3}
       propertyPath: m_Name
@@ -125,6 +130,11 @@ PrefabInstance:
         type: 3}
       propertyPath: groundLayerMask.m_Bits
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 962722006114918393, guid: 16942c5fc1046e644ac26a866133a033,
+        type: 3}
+      propertyPath: strength
+      value: 155
       objectReference: {fileID: 0}
     - target: {fileID: 962722006114918394, guid: 16942c5fc1046e644ac26a866133a033,
         type: 3}

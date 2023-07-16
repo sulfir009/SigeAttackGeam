@@ -6,12 +6,6 @@ Library\Bee\artifacts\mvdfrm\UnityEditor.TestRunner.ref.dll_193EC4CE382CBFB3.mvf
 Library\Bee\artifacts\mvdfrm\UnityEditor.UI.ref.dll_4C98D3F7040CD4F5.mvfrm
 Library\Bee\artifacts\mvdfrm\UnityEngine.TestRunner.ref.dll_E55D0F7C63F01D9E.mvfrm
 Library\Bee\artifacts\mvdfrm\UnityEngine.UI.ref.dll_08FEAA520A2EFD60.mvfrm
-Library\Bee\artifacts\mvdfrm\Unity.Plastic.Antlr3.Runtime.dll_F17A3439C30243DF.mvfrm
-Library\Bee\artifacts\mvdfrm\Unity.Plastic.Newtonsoft.Json.dll_D5C3F15E2A981FE6.mvfrm
-Library\Bee\artifacts\mvdfrm\Unity.VisualScripting.IonicZip.dll_22E33B2A595766CB.mvfrm
-Library\Bee\artifacts\mvdfrm\Unity.VisualScripting.YamlDotNet.dll_A8FED504A8C3DE21.mvfrm
-Library\Bee\artifacts\mvdfrm\Unity.VisualScripting.TextureAssets.dll_401CFE5869913C19.mvfrm
-Library\Bee\artifacts\mvdfrm\Unity.VisualScripting.Antlr3.Runtime.dll_5A6BFBE5D98CEE40.mvfrm
 Library\Bee\artifacts\mvdfrm\UnityEditor.Graphs.dll_6FAB9346899EE153.mvfrm
 Library\Bee\artifacts\mvdfrm\UnityEditor.CoreModule.dll_67F38B6A1D11B821.mvfrm
 Library\Bee\artifacts\mvdfrm\UnityEditor.DeviceSimulatorModule.dll_3268270C83949670.mvfrm
@@ -96,7 +90,10 @@ Library\Bee\artifacts\mvdfrm\UnityEngine.VirtualTexturingModule.dll_1CB969BD4D93
 Library\Bee\artifacts\mvdfrm\UnityEngine.VRModule.dll_0B79BF60F00FD779.mvfrm
 Library\Bee\artifacts\mvdfrm\UnityEngine.WindModule.dll_016339E5564DA1B5.mvfrm
 Library\Bee\artifacts\mvdfrm\UnityEngine.XRModule.dll_3E388265794A24D7.mvfrm
-Library\Bee\artifacts\mvdfrm\Unity.Android.Gradle.dll_18C7BDF8D1E51289.mvfrm
-Library\Bee\artifacts\mvdfrm\Unity.Android.Types.dll_CAAEA5D42024C1C3.mvfrm
-Library\Bee\artifacts\mvdfrm\UnityEditor.Android.Extensions.dll_A5117E4D45852E69.mvfrm
 Library\Bee\artifacts\mvdfrm\UnityEditor.WindowsStandalone.Extensions.dll_7AAE8F3E884ED48F.mvfrm
+Library\Bee\artifacts\mvdfrm\Unity.Plastic.Antlr3.Runtime.dll_8837A75C174AD40A.mvfrm
+Library\Bee\artifacts\mvdfrm\Unity.Plastic.Newtonsoft.Json.dll_F10F3E0778E95B8B.mvfrm
+Library\Bee\artifacts\mvdfrm\Unity.VisualScripting.IonicZip.dll_DDAC8C321DA51056.mvfrm
+Library\Bee\artifacts\mvdfrm\Unity.VisualScripting.YamlDotNet.dll_74DCF3C1739FA506.mvfrm
+Library\Bee\artifacts\mvdfrm\Unity.VisualScripting.TextureAssets.dll_0BFB1D15346D02FE.mvfrm
+Library\Bee\artifacts\mvdfrm\Unity.VisualScripting.Antlr3.Runtime.dll_264A1AA2A468B525.mvfrm
